@@ -8,15 +8,16 @@ class Httpsbin < Formula
 
   def install
     (libexec/"bin").install "httpsbin"
-    etc.install "config.toml", "httpsbin"
+    etc.install ({"config.toml"=> "httpsbin"})
 
-    datadir.mkpath
+    datadir.mkpath unless datadir.exist?
+    rm_rf datadir/"tmpl"
     datadir.install "tmpl"
 
     (bin/"httpsbin").write <<-EOS.undent
     #!/bin/bash
     cd "#{datadir}"
-    exec "#{libexec/"bin/httpsbin"}" "#{etc/"httpsbin"}
+    exec "#{libexec/"bin/httpsbin"}" #{etc/"httpsbin"}
     EOS
   end
 
